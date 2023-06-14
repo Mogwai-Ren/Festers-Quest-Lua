@@ -24,10 +24,24 @@ local slotIdLookup = {
     [0x13] = "FaceMove",
     [0x14] = "GreenRock",
     [0x16] = "EyeBall",
-    [0x20] = "Item", -- Can't find how items are stored yet. 0x00C6 & 0x04E7?
+    [0x20] = "Item", -- Can't find how items are stored yet. 0x03*6 & 0x03*7 & 0x03*E?
 }
 
--- Defines the slot # and health lookup table
+-- Non Boss Memory Slots 
+	-- 0x0300-0x0360 (Each 0x10 is new slot 1-7)
+		-- 0x03*0 Slot timer
+		-- 0x03*1 Slot Y
+		-- 0x03*2 ??
+		-- 0x03*3 Slot X 
+		-- 0x03*4 Visible on screen
+		-- 0x03*5 Jumping
+		-- 0x03*6 ?? 
+		-- 0x03*7 ??
+		-- 0x03*8 Slot Health
+		-- 0x03*9-0x03*C Next Spawn locations?
+		-- 0x03*F Slot status
+			
+-- Defines the Slot # and health lookup table
 local slotHealthLookup = {
     [0x308] = "1",
     [0x318] = "2",
@@ -39,7 +53,7 @@ local slotHealthLookup = {
 }
 
 function displayInfo()
-    -- Gets slotIdValues from RAM
+    	-- Gets slotIdValues from RAM
     local slotIdValues = {}
     local checkValues = {}
     for i = 0, 6 do
@@ -47,28 +61,45 @@ function displayInfo()
         checkValues[i + 1] = emu.read(0x0300 + 0x10 * i, emu.memType.nesDebug)
     end
 
-    -- Gets Fester's Key Count, Gun Level, GPS, Step from RAM addresses
-    local keyCount = emu.read(0x015D, emu.memType.nesDebug)
+    	-- Item Memory 0x015C-0x0164
+    		-- Bulb 0x015C
+    		-- Key 0x015D
+    		-- Noose 0x015E
+    		-- Vice Grips 0x015F 
+    		-- Potion 0x0160 
+    		-- Invisible 0x0161 
+    		-- Money 0x162 
+    		-- Missile 0x0163 
+    		-- TNT 0x0164
+    	-- Fester Memory 
+        	-- Fester Current Health 0x04E9
+    		-- # of Fester Health Slots 0x04EA
+    		-- Gun 0x04E7
+    		-- Whip 0x04E8
+    		-- Step 0x04F7
+    		
+    -- Gets Fester's Key Count, Gun Level, GPS, "Step" from RAM addresses
+    local keyCount = emu.read(0x015D, emu.memType.nesDebug) 
     local gunLevel = emu.read(0x04E7, emu.memType.nesDebug)
     local festerStep = emu.read(0x04F7, emu.memType.nesDebug)
-    
-    -- Gets festerX:Y
-    --local festerX = emu.read(0x04F3, emu.memType.nesDebug) -- Not sure correct address; using for now
-    --local festerY = emu.read(0x04F9, emu.memType.nesDebug) -- Not sure correct address; using for now
+  
+    	-- Gets festerX:Y ** Not sure correct address; using for now **
+    --local festerX = emu.read(0x04F3, emu.memType.nesDebug) 
+    --local festerY = emu.read(0x04F9, emu.memType.nesDebug) 
 
-    -- Displays Key, Gun, Step
-    emu.drawString(130, 0, "Key:" .. (keyCount - 1), 0xFFFFFF, 0xFF000000)
-    emu.drawString(130, 8, "Gun:" .. gunLevel, 0xFFFFFF, 0xFF000000)
-    emu.drawString(130, 16, "Step:" .. festerStep, 0xFFFFFF, 0xFF000000)
+    	-- Displays Key, Gun, Step
+    emu.drawString(140, 0, "Key:" .. (keyCount - 1), 0xFFFFFF, 0xFF000000) --140
+    emu.drawString(140, 8, "Gun:" .. gunLevel, 0xFFFFFF, 0xFF000000)
+    emu.drawString(140, 16, "Step:" .. festerStep, 0xFFFFFF, 0xFF000000)
     
-    -- GPS
+    	-- GPS
     --emu.drawString(100, 0, 'X:' .. festerX, 0xFFFFFF, 0xFF000000)
     --emu.drawString(100, 8, "Y:" .. festerY, 0xFFFFFF, 0xFF000000)
 
     -- Display mSlot(Enemy) Health
     for address, mSlot in pairs(slotHealthLookup) do
         local slotHealth = emu.read(address, emu.memType.nesDebug)
-        emu.drawString(162, (mSlot - 1) * 8, mSlot .. ":" .. slotHealth, 0xFFFFFF, 0xFF000000)
+        emu.drawString(172, (mSlot - 1) * 8, mSlot .. ":" .. slotHealth, 0xFFFFFF, 0xFF000000)
     end
 
     -- Displays SlotIdValue
@@ -78,7 +109,7 @@ function displayInfo()
             -- Gets the slot IDs from the lookup table
             local slotId = slotIdLookup[slotIdValue] or "Null"
             -- Prints the slot IDs on the screen
-            emu.drawString(192, (slotNumber - 1) * 8, slotId, 0xFFFFFF, 0xFF000000)
+            emu.drawString(202, (slotNumber - 1) * 8, slotId, 0xFFFFFF, 0xFF000000)
         end
     end
 end
