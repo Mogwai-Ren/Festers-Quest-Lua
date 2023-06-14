@@ -34,7 +34,7 @@ local slotIdLookup = {
 		-- 0x03*2 ??
 		-- 0x03*3 Slot X 
 		-- 0x03*4 Visible on screen
-		-- 0x03*5 Jumping
+		-- 0x03*5 Jumping/Floating?
 		-- 0x03*6 ?? 
 		-- 0x03*7 ??
 		-- 0x03*8 Slot Health
