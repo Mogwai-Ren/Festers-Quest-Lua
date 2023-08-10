@@ -1,4 +1,4 @@
--- Fester's Quest Crappy Heads Up Display. Made with Mesen2 by Mogwai_Ren
+-- Fester's Quest Heads Up Display. Made with Mesen2 by Mogwai_Ren
 
 -- Defines the slot ID lookup table
 local slotIdLookup = {
@@ -45,7 +45,7 @@ local itemDropLookup = {
 		-- 0x03*2 ??
 		-- 0x03*3 Slot X 
 		-- 0x03*4 Visible on screen
-		-- 0x03*5 Jumping/*Item DropID if (slotIdLookup == 20 and 0x03*5 == (itemDropLookup))**
+		-- 0x03*5 **Item DropID if (slotIdLookup == 20 then 0x03*5 == (itemDropLookup))**
 		-- 0x03*6 ?? 
 		-- 0x03*7 ??
 		-- 0x03*8 Slot Health
@@ -89,24 +89,16 @@ function displayInfo()
     		-- Whip 0x04E8
     		-- Step 0x04F7
     		
-    -- Gets Fester's Key Count, Gun Level, GPS, "Step" from RAM addresses
+    -- Gets Fester's Key Count, Gun Level, "Step" from RAM addresses
     local keyCount = emu.read(0x015D, emu.memType.nesDebug) 
     local gunLevel = emu.read(0x04E7, emu.memType.nesDebug)
     --local festerStep = emu.read(0x04F7, emu.memType.nesDebug)
   
-    	-- Gets festerX:Y ** Not sure correct address; using for now **
-    --local festerX = emu.read(0x04F3, emu.memType.nesDebug) 
-    --local festerY = emu.read(0x04F9, emu.memType.nesDebug) 
-
     	-- Displays Key, Gun, Step
     emu.drawString(140, 0, "Key:" .. (keyCount - 1), 0xFFFFFF, 0xFF000000) -- 140
     emu.drawString(140, 8, "Gun:" .. gunLevel, 0xFFFFFF, 0xFF000000) -- 140
     --emu.drawString(140, 16, "Step:" .. festerStep, 0xFFFFFF, 0xFF000000) -- 140
     
-    	-- GPS
-    --emu.drawString(100, 0, 'X:' .. festerX, 0xFFFFFF, 0xFF000000) -- 100
-    --emu.drawString(100, 8, "Y:" .. festerY, 0xFFFFFF, 0xFF000000) -- 100
-
     -- Display mSlot(Enemy) Health
     for address, mSlot in pairs(slotHealthLookup) do
         local slotHealth = emu.read(address, emu.memType.nesDebug)
